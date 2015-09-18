@@ -9,9 +9,45 @@
     <title>Curious Learning assesment input table</title>
 </head>
 <body>
+    <script>
+        function validateForm() {
+            var recep_vocab = $("#receptive_vocab").val();
+            var letter_id = $("#letter_id").val();
+            var dec_sight = $("#dec_sight_words").val();
+            var rhyming = $("#rhyming").val();
+            var blending = $("#blending").val();
+            var nonword_rep = $("nonword_rep").val();
 
+            console.log( "Called validateForm" );
+
+            // receptive vocab max 18
+            if ( recep_vocab < 0 || recep_vocab > 18) {
+                console.log( "recep vocab score bad" );
+            }
+            // letter id ma 80
+            if ( letter_id < 0 || letter_id > 80) {
+                console.log( "letter score bad" );
+            }
+            // decodable and sight words max 11
+            if ( dec_sight < 0 || dec_sight > 11) {
+                console.log( "dec sight score bad" );
+            }
+            // rhyming max 6
+            if ( rhyming < 0 || rhyming > 6) {
+                console.log( "rhyming score bad" );
+            }
+            // blending max 6
+            if ( blending < 0 || blending > 6) {
+                console.log( "belding score bad" );
+            }
+            // non word rep max 6
+            if ( nonword_rep < 0 || nonword_rep > 6) {
+                console.log( "nonword_repition score bad" )
+            }
+        }
+    </script>
 <div class="container-fluid">
-    <form method="post" action="assessmentdataupload.php">
+    <form onsubmit="return validateForm()">
         <div class="table-responsive">
         <table class="table table-bordered table-striped dataTable">
             <thead>
@@ -46,7 +82,9 @@
             </tbody>
         </table>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
+        <div class="box-footer">
+            <input type="submit" class="btn btn-primary">
+        </div>
     </form>
 </div>
 
