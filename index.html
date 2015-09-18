@@ -47,7 +47,7 @@
         }
     </script>
 <div class="container-fluid">
-    <form onsubmit="return validateForm()">
+    <form action="readdata.php" method="post">
         <div class="table-responsive">
         <table class="table table-bordered table-striped dataTable">
             <thead>
@@ -67,14 +67,14 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class=" "><input class="form-control" type="number" id="id"></td>
-                    <td class=" "><input class="form-control" type="date" id="birth_date"></td>
+                    <td class=" "><input class="form-control" type="number" id="id" name="id"></td>
+                    <td class=" "><input class="form-control" type="date" id="birth_date" name="birth_date" required></td>
                     <td class=" "><input class="form-control" type="date" id="testing_date"></td>
                     <td class=" "><input class="form-control" type="date" id="scoring_date"></td>
                     <td class=" "><input class="form-control" type="number" id="receptive_vocab"></td>
                     <td class=" "><input class="form-control" type="number" id="letter_id"></td>
                     <td class=" "><input class="form-control" type="number" id="dec_sight_words"></td>
-                    <td class=" "><input class="form-control" type="number" id="rhyming"></td>
+                    <td class=" "><input class="form-control" type="number" id="rhyming" name="rhyming"></td>
                     <td class=" "><input class="form-control" type="number" id="blending"></td>
                     <td class=" "><input class="form-control" type="number" id="nonword_rep"></td>
                     <td class=" "><input class="form-control" type="text" id="comments"></td>
