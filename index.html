@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,14 +43,35 @@
             }
             // non word rep max 6
             if ( nonword_rep < 0 || nonword_rep > 6) {
-                console.log( "nonword_repition score bad" )
+                console.log( "nonword_repition score bad" );
             }
+        }
+
+        function addRow() {
+            console.log("in add row");
+            // get the number of rows in table currently
+            // this will also be our new row number since we start at 0
+            var rowCount = $('#assessment_table > tbody > tr').length;
+            console.log("numrows: " + rowCount);
+            var row = '<tr><td class=" "><input class="form-control" type="number" id="id0"  name="id0" ></td> \
+                       <td class=" "><input class="form-control" type="date"   id="birth_date0"      name="birth_date0" ></td> \
+                       <td class=" "><input class="form-control" type="date"   id="testing_date0"    name="testing_date0" ></td> \
+                       <td class=" "><input class="form-control" type="date"   id="scoring_date0"    name="scoring_date0" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="receptive_vocab0" name="receptive_vocab0" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="letter_id0"       name="letter_id0" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="dec_sight_words0" name="dec_sight_words0" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="rhyming0"         name="rhyming0" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="blending0"        name="blending0" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="nonword_rep0"     name="nonword_rep0" ></td> \
+                       <td class=" "><input class="form-control" type="text"   id="comments0"        name="comments0"></td></tr>'
+            // taken from stack overflow
+            $('#assessment_table').find('tbody:last').append(row);
         }
     </script>
 <div class="container-fluid">
     <form action="readdata.php" method="post">
         <div class="table-responsive">
-        <table class="table table-bordered table-striped dataTable">
+        <table class="table table-bordered table-striped dataTable" id="assessment_table" name="assessment_table">
             <thead>
                 <tr>
                     <th><label for="id0">ID</label></th>
@@ -67,16 +89,16 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class=" "><input class="form-control" type="number" id="id0"              name="id0"></td>
-                    <td class=" "><input class="form-control" type="date"   id="birth_date0"      name="birth_date0" required></td>
-                    <td class=" "><input class="form-control" type="date"   id="testing_date0"    name="testing_date0"></td>
-                    <td class=" "><input class="form-control" type="date"   id="scoring_date0"    name="scoring_date0"></td>
-                    <td class=" "><input class="form-control" type="number" id="receptive_vocab0" name="receptive_vocab0"></td>
-                    <td class=" "><input class="form-control" type="number" id="letter_id0"       name="letter_id0"></td>
-                    <td class=" "><input class="form-control" type="number" id="dec_sight_words0" name="dec_sight_words0"></td>
-                    <td class=" "><input class="form-control" type="number" id="rhyming0"         name="rhyming0"></td>
-                    <td class=" "><input class="form-control" type="number" id="blending0"        name="blending0"></td>
-                    <td class=" "><input class="form-control" type="number" id="nonword_rep0"     name="nonword_rep0"></td>
+                    <td class=" "><input class="form-control" type="number" id="id0"              name="id0" ></td>
+                    <td class=" "><input class="form-control" type="date"   id="birth_date0"      name="birth_date0" ></td>
+                    <td class=" "><input class="form-control" type="date"   id="testing_date0"    name="testing_date0" ></td>
+                    <td class=" "><input class="form-control" type="date"   id="scoring_date0"    name="scoring_date0" ></td>
+                    <td class=" "><input class="form-control" type="number" id="receptive_vocab0" name="receptive_vocab0" ></td>
+                    <td class=" "><input class="form-control" type="number" id="letter_id0"       name="letter_id0" ></td>
+                    <td class=" "><input class="form-control" type="number" id="dec_sight_words0" name="dec_sight_words0" ></td>
+                    <td class=" "><input class="form-control" type="number" id="rhyming0"         name="rhyming0" ></td>
+                    <td class=" "><input class="form-control" type="number" id="blending0"        name="blending0" ></td>
+                    <td class=" "><input class="form-control" type="number" id="nonword_rep0"     name="nonword_rep0" ></td>
                     <td class=" "><input class="form-control" type="text"   id="comments0"        name="comments0"></td>
                 </tr>
             </tbody>
@@ -84,6 +106,7 @@
         </div>
         <div class="box-footer">
             <input type="submit" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" onclick="addRow();">Add Row</button>
         </div>
     </form>
 </div>
