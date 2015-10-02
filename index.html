@@ -8,9 +8,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <title>Curious Learning assesment input table</title>
+    <style type="text/css">
+        #loading_indicator {
+            display: none;
+            size: 40px 40px;
+            position: absolute;
+            left: 120px;
+            top: 80px;
+        }
+        .alert {
+            width:40%;
+        }
+    </style>
 </head>
 <body>
     <script>
+        $('#loading_indicator').hide();
         function validateForm() {
             var recep_vocab = $("#receptive_vocab").val();
             var letter_id = $("#letter_id").val();
@@ -47,30 +60,56 @@
             }
         }
 
+        function submitAnnimation() {
+            // indicate they can't change info
+            $('#loading_indicator').show();
+            $('#table_div').fadeTo(500,0.2);
+
+            var data = {};
+            $('#assessment_table input').each (function() {
+                data[this.name] = this.value;
+            });
+
+            $.ajax({
+                method: "POST",
+                url: "readdata.php",
+                data: data
+            }).done(function( msg ){
+                $('#loading_indicator').hide();
+                $('#table_div').fadeTo(500,1.0);
+                $('.box-footer').append(msg);
+                window.setTimeout(function() { $(".alert-success").alert('close'); }, 2000);
+            });
+        }
         function addRow() {
             console.log("in add row");
             // get the number of rows in table currently
             // this will also be our new row number since we start at 0
-            var rowCount = $('#assessment_table > tbody > tr').length;
+            var rowCount = $('#assessment_table > tbody > tr').length;  // You can just set a Global for this
             console.log("numrows: " + rowCount);
-            var row = '<tr><td class=" "><input class="form-control" type="number" id="id0"  name="id0" ></td> \
-                       <td class=" "><input class="form-control" type="date"   id="birth_date0"      name="birth_date0" ></td> \
-                       <td class=" "><input class="form-control" type="date"   id="testing_date0"    name="testing_date0" ></td> \
-                       <td class=" "><input class="form-control" type="date"   id="scoring_date0"    name="scoring_date0" ></td> \
-                       <td class=" "><input class="form-control" type="number" id="receptive_vocab0" name="receptive_vocab0" ></td> \
-                       <td class=" "><input class="form-control" type="number" id="letter_id0"       name="letter_id0" ></td> \
-                       <td class=" "><input class="form-control" type="number" id="dec_sight_words0" name="dec_sight_words0" ></td> \
-                       <td class=" "><input class="form-control" type="number" id="rhyming0"         name="rhyming0" ></td> \
-                       <td class=" "><input class="form-control" type="number" id="blending0"        name="blending0" ></td> \
-                       <td class=" "><input class="form-control" type="number" id="nonword_rep0"     name="nonword_rep0" ></td> \
-                       <td class=" "><input class="form-control" type="text"   id="comments0"        name="comments0"></td></tr>'
+            var row = '<tr><td class=" "><input class="form-control" type="number" id="id"  name="id" ></td> \
+                       <td class=" "><input class="form-control" type="date"   id="birth_date"      name="birth_date" ></td> \
+                       <td class=" "><input class="form-control" type="date"   id="testing_date"    name="testing_date" ></td> \
+                       <td class=" "><input class="form-control" type="date"   id="scoring_date"    name="scoring_date" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="receptive_vocab" name="receptive_vocab" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="letter_id"       name="letter_id" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="dec_sight_words" name="dec_sight_words" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="rhyming"         name="rhyming" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="blending"        name="blending" ></td> \
+                       <td class=" "><input class="form-control" type="number" id="nonword_rep"     name="nonword_rep" ></td> \
+                       <td class=" "><input class="form-control" type="text"   id="comments"        name="comments"></td></tr>'
             // taken from stack overflow
             $('#assessment_table').find('tbody:last').append(row);
+            $('tr:last').find('.form-control').each (function() {
+                // add a suffix of the row to the name and id of each new input
+                this.id = this.id + rowCount;
+                this.name = this.name + rowCount;
+            });
         }
     </script>
 <div class="container-fluid">
-    <form action="readdata.php" method="post">
-        <div class="table-responsive">
+    <div class="table-responsive" id="table_div">
+        <img src="loader.gif" id="loading_indicator" name="loading_indicator">
         <table class="table table-bordered table-striped dataTable" id="assessment_table" name="assessment_table">
             <thead>
                 <tr>
@@ -103,12 +142,12 @@
                 </tr>
             </tbody>
         </table>
-        </div>
-        <div class="box-footer">
-            <input type="submit" class="btn btn-primary">
-            <button type="button" class="btn btn-primary" onclick="addRow();">Add Row</button>
-        </div>
-    </form>
+    </div>
+    <div class="box-footer">
+        <button type="button" class="btn btn-primary" id="submit_button" onclick="submitAnnimation();">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="addRow();">Add Row</button>
+        <button type="button" class="btn btn-primary" onclick="submitAnnimation();">Annimate</button>
+    </div>
 </div>
 
 </body>

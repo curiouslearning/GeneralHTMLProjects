@@ -1,5 +1,12 @@
 <?php
 
+?>
+<div class="alert alert-success fade in" id="success_alert">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>Success!</strong> Your form has been sent successfully.
+</div>
+<?php
+
 function main() {
     $idName = "id";
     $birthDateName = "birth_date";
@@ -83,10 +90,10 @@ function validate(callable $isValid, $array) {
     foreach ($array as $elem) {
         if ($isValid($elem) == false) {
             $numInvalid++;
-            echo("$elem is not valid");
+            //echo("$elem is not valid");
         }
         else {
-            echo("$elem is valid");
+            //echo("$elem is valid");
         }
     }
 }
