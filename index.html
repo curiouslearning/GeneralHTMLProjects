@@ -17,12 +17,14 @@
             top: 80px;
         }
         .alert {
-            width:40%;
+            width:30%;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <script>
+        var rowCount = 1;
         $('#loading_indicator').hide();
         function validateForm() {
             var recep_vocab = $("#receptive_vocab").val();
@@ -64,8 +66,13 @@
             // indicate they can't change info
             $('#loading_indicator').show();
             $('#table_div').fadeTo(500,0.2);
+            $('button').each(function(){
+                this.disabled = true;
+                console.log("disabled" + this.disabled)
+            });
 
             var data = {};
+            data["table_rows"] = rowCount;
             $('#assessment_table input').each (function() {
                 data[this.name] = this.value;
             });
@@ -75,18 +82,24 @@
                 url: "readdata.php",
                 data: data
             }).done(function( msg ){
-                $('#loading_indicator').hide();
-                $('#table_div').fadeTo(500,1.0);
                 $('.box-footer').append(msg);
-                window.setTimeout(function() { $(".alert-success").alert('close'); }, 2000);
+                window.setTimeout(function() { $(".alert-success").alert('close');}, 4000);
+                window.setTimeout(function() {
+                    $('#loading_indicator').hide();
+                    $('#table_div').fadeTo(500,1.0);
+                    $('button').each(function(){
+                        this.disabled = false;
+                    });
+                    // clear the table of added rows
+                    $('tbody').children('tr').not(':first').remove();
+                    // clear first row of input data
+                    $('input').val('');
+                    rowCount = 1;
+                }, 1000);
             });
         }
+
         function addRow() {
-            console.log("in add row");
-            // get the number of rows in table currently
-            // this will also be our new row number since we start at 0
-            var rowCount = $('#assessment_table > tbody > tr').length;  // You can just set a Global for this
-            console.log("numrows: " + rowCount);
             var row = '<tr><td class=" "><input class="form-control" type="number" id="id"  name="id" ></td> \
                        <td class=" "><input class="form-control" type="date"   id="birth_date"      name="birth_date" ></td> \
                        <td class=" "><input class="form-control" type="date"   id="testing_date"    name="testing_date" ></td> \
@@ -105,9 +118,11 @@
                 this.id = this.id + rowCount;
                 this.name = this.name + rowCount;
             });
+            rowCount = rowCount + 1;
         }
     </script>
 <div class="container-fluid">
+    <form action="readdata.php" method="post">
     <div class="table-responsive" id="table_div">
         <img src="loader.gif" id="loading_indicator" name="loading_indicator">
         <table class="table table-bordered table-striped dataTable" id="assessment_table" name="assessment_table">
@@ -147,7 +162,9 @@
         <button type="button" class="btn btn-primary" id="submit_button" onclick="submitAnnimation();">Submit</button>
         <button type="button" class="btn btn-primary" onclick="addRow();">Add Row</button>
         <button type="button" class="btn btn-primary" onclick="submitAnnimation();">Annimate</button>
+        <input type="submit" class="btn btn-primary">
     </div>
+    </form>
 </div>
 
 </body>
