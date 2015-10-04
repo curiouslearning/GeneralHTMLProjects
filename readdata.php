@@ -1,13 +1,12 @@
 <?php
-var_dump($_POST);
-/*
+
 ?>
 <div class="alert alert-success fade in" id="success_alert">
     <a href="#" class="close" data-dismiss="alert">&times;</a>
     <strong>Success!</strong> Your form has been sent successfully.
 </div>
 <?php
-*/
+
 
 function main() {
     $idName = "id";
@@ -22,7 +21,7 @@ function main() {
     $nonwordRepName = "nonword_rep";
     $commentsName = "comments";
     $rowsName = "table_rows";
-    $rows = $_POST["$rowsName"];
+    $rows = 1;//$_POST["$rowsName"];
 
     // collect ids
     $idArray = collectInputs($rows, $idName);
@@ -67,61 +66,92 @@ function main() {
 
     // comments dont need to be validated TODO: prevent SQL injection
     $commentArray = collectInputs($rows, $commentsName);
-/*
+
+    // TODO: make this new function
+
+    $connection = mysqli_connect("localhost","curious_learning","readingisgood","assessments");
+    // Check connection
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    }
+
     $names = array("id", "birth_date", "testing_date", "scoring_date", "receptive_vocab", "letter_id",
-                   "decodable_sight_words", "rhyming", "blending", "nonword_repition", "comments");
+                   "decodable_sight_words", "rhyming", "blending", "nonword_repetition", "comments");
+    $fields = fields_query_str($names, $connection);
 
     for ($i = 0; $i < $rows; $i++) {
         // insert data into table
         $data = array($idArray[$i], $rhymingScoreArray[$i], $blendingScoreArray[$i], $nonwordRepScoreArray[$i],
                      $recepVocabScoreArray[$i], $letterIDScoreArray[$i], $decSightWordScoreArray[$i],
                      $birthdayArray[$i], $testingDateArray[$i], $scoringDateArray[$i], $commentArray[$i]);
-        insertAssessmentData($data, $names);
+        $vals_str = vals_query_str($data);
+        insertAssessmentData($vals_str, $fields, $connection);
+        break;
     }
-*/
+
 }
 
-/*
+
 // values
 // TODO: make this take types into account
-function sql_values($vals) {
+function vals_query_str($vals, $con) {
     $str = "(";
     $i = 0;
-    $count = array_count_values($vals);
-    for ($names as $n) {
+    $count = count($vals);
+
+    foreach ($vals as $v) {
         // form the $n
-        if (isDate($n)) {
+        if ($v == null) {
+            $str = $str . "null";
+        }
+        elseif (isDate($v) == true) {
             // put it into the correct date format
-            $newDate = date("Y-d-m", strtotime($n));
-        } else if (is_string())
-            // put escaped quotes around it
+            $date = date("Y-d-m", strtotime($v));
+            $str = $str . $date;
+        }
+        else if (is_numeric($v)) {
+            $str = $str . $v;
+        }
+        else if (is_string($v)) {
+            //$str = $str . mysqli_real_escape_string($v, $con);
+            $str = $str . '\'' . $v . '\'';
         }
 
-        $fields = $fields . $n;
-        if ( $i != $count - 1) {
-            $fields = $fields . ", ";
+        // put a comma after every value but the last
+        if ( $i < $count - 1) {
+            $str = $str . ", ";
         }
         $i = $i + 1;
     }
-    $fields = $fields . ")";
-    return $fields;
+    $str = $str . ")";
+    return $str;
 }
 
+function fields_query_str($fields) {
+    $str = "(";
+    $i = 0;
+    $count = count($fields);
+    foreach ($fields as $f) {
+        $str = $str . $f;
+        // put a comma after every value but the last
+        if ( $i < $count - 1) {
+            $str = $str . ", ";
+        }
+        $i = $i + 1;
+    }
+    $str = $str . ")";
+    return $str;
 
+}
 
 // inserts the given data into the assessment_data table under the given field names
-function insertAssessmentData($data, $names) {
+function insertAssessmentData($values, $fields, $con) {
     // form the first part of the query
-    $names_str = array_reduce($names, "concat");
-    $sql = "INSERT INTO assessment_data " . $names_str;
-
-
-    for ($names as $n) {
-        $sql = $sql + $n;
-    }
-
+    $sql = "INSERT INTO assessment_data " . $fields . " VALUES " . $values . ";";
+    $result = mysqli_query($con, $sql);
+    var_dump($sql);
+    var_dump($result);
 }
-*/
 
 // Todo: include post in purpose statement
 // purp: returns an array containing the input fields from the given number
@@ -160,10 +190,7 @@ function validate(callable $isValid, $array) {
 // returns true if the the given string describes a valid date in one
 // of the following two formats: mm/dd/yyyy  or yyyy-dd-mm
 function isDate($str) {
-    if ($str == null) {
-        return true;
-    }
-    elseif (validateDate($str, 'm/d/Y') or validateDate($str, 'Y-d-m')) {
+    if (validateDate($str, 'm/d/Y') or validateDate($str, 'Y-d-m')) {
         return true;
     }
     else {
@@ -174,7 +201,7 @@ function isDate($str) {
 // TODO: acknowledge taken from online
 function validateDate($date, $format = 'm-d-Y') {
     $d = DateTime::createFromFormat($format, $date);
-    return $d && $d->format($format) == $date;
+    return $d;
 }
 
 
