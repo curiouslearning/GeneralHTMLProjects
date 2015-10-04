@@ -21,102 +21,143 @@ function main() {
     $nonwordRepName = "nonword_rep";
     $commentsName = "comments";
     $rowsName = "table_rows";
-    $rows = 1;//$_POST["$rowsName"];
+    $rows = $_POST["$rowsName"];
 
     // collect ids
     $idArray = collectInputs($rows, $idName);
-    validate("is_numeric", $idArray);
+    $idArray = validate("is_numeric", $idArray);
 
     // rhymiung score
     $rhymingScoreArray = collectInputs($rows, $rhymingName);
     //echo(print_r($rhymingScoreArray, true));
-    validate("is_numeric", $rhymingScoreArray);
+    $rhymingScoreArray = validate("is_numeric", $rhymingScoreArray);
 
     // blending scores
     $blendingScoreArray = collectInputs($rows, $blendingName);
-    validate("is_numeric", $blendingScoreArray);
+    $blendingScoreArray = validate("is_numeric", $blendingScoreArray);
 
     // nonwordRep scores
     $nonwordRepScoreArray = collectInputs($rows, $nonwordRepName);
-    validate("is_numeric", $nonwordRepScoreArray);
+    $nonwordRepScoreArray = validate("is_numeric", $nonwordRepScoreArray);
 
     // receptive vocab score
     $recepVocabScoreArray = collectInputs($rows, $receptiveVocabName);
-    validate("is_numeric", $recepVocabScoreArray);
+    $recepVocabScoreArray = validate("is_numeric", $recepVocabScoreArray);
 
     // letter id score
     $letterIDScoreArray = collectInputs($rows, $letterIDName);
-    validate("is_numeric", $letterIDScoreArray);
+    $letterIDScoreArray = validate("is_numeric", $letterIDScoreArray);
 
     // dec sight word score
     $decSightWordScoreArray = collectInputs($rows, $decSightWordsName);
-    validate("is_numeric", $decSightWordScoreArray);
+    $decSightWordScoreArray = validate("is_numeric", $decSightWordScoreArray);
 
     // collect birthdays
     $birthdayArray = collectInputs($rows, $birthDateName);
-    validate("isDate", $birthdayArray);
+    $birthdayArray = validate("isDate", $birthdayArray);
 
     // testing dates
     $testingDateArray = collectInputs($rows, $testingDateName);
-    validate("isDate", $testingDateArray);
+    $testingDateArray = validate("isDate", $testingDateArray);
 
     // scoring dates
     $scoringDateArray = collectInputs($rows, $scoringDateName);
-    validate("isDate", $scoringDateArray);
+    $scoringDateArray = validate("isDate", $scoringDateArray);
 
     // comments dont need to be validated TODO: prevent SQL injection
     $commentArray = collectInputs($rows, $commentsName);
 
-    // TODO: make this new function
+    $assessment_data = array(
+        "id" => $idArray,
+        "rhyming" => $rhymingScoreArray,
+        "blending" => $blendingScoreArray,
+        "nonword_repetition" => $nonwordRepScoreArray,
+        "receptive_vocab" => $recepVocabScoreArray,
+        "letter_id" => $letterIDScoreArray,
+        "decodable_sight_words" => $decSightWordScoreArray,
+        "birth_date" => $birthdayArray,
+        "testing_date" => $testingDateArray,
+        "scoring_date" => $scoringDateArray,
+        "comments" => $commentArray
+    );
 
-    $connection = mysqli_connect("localhost","curious_learning","readingisgood","assessments");
+    insertAssessmentData($assessment_data, $rows);
+}
+
+// inserts the given data into the assessment_data table under the given field names
+function insertAssessmentData($field_data_dict, $numRows) {
+    // make mysql connection
+    $con = sqlConnection();
+    if ($con == null) {
+        return false;
+    }
+
+    // get the names of the fields we are inserting into
+    $field_str = query_str(array_keys($field_data_dict));
+
+    // go through each row in the table
+    for ($i = 0; $i < $numRows; $i++) {
+        $values = array();
+        // collect all values from that row
+        foreach ($field_data_dict as $field => $dataArray){
+            array_push($values, $dataArray[$i]);
+        }
+        $vals_str = query_str($values, "format_value");
+        // form the first part of the query
+        $sql = "INSERT INTO assessment_data " . $field_str . " VALUES " . $vals_str . ";";
+        $result = mysqli_query($con, $sql);
+        var_dump($result);
+    }
+}
+
+
+function sqlConnection() {
+    $connection = mysqli_connect("localhost", "curious_learning", "readingisgood", "assessments");
     // Check connection
     if (mysqli_connect_errno()) {
+        $connection = null;
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
     }
+    return $connection;
+}
 
-    $names = array("id", "birth_date", "testing_date", "scoring_date", "receptive_vocab", "letter_id",
-                   "decodable_sight_words", "rhyming", "blending", "nonword_repetition", "comments");
-    $fields = fields_query_str($names, $connection);
-
-    for ($i = 0; $i < $rows; $i++) {
-        // insert data into table
-        $data = array($idArray[$i], $rhymingScoreArray[$i], $blendingScoreArray[$i], $nonwordRepScoreArray[$i],
-                     $recepVocabScoreArray[$i], $letterIDScoreArray[$i], $decSightWordScoreArray[$i],
-                     $birthdayArray[$i], $testingDateArray[$i], $scoringDateArray[$i], $commentArray[$i]);
-        $vals_str = vals_query_str($data);
-        insertAssessmentData($vals_str, $fields, $connection);
-        break;
+function format_value($value) {
+    $formatted_str = null;
+    if ($value == null) {
+        $formatted_str = "null";
     }
-
+    elseif (isDate($value) == true) {
+        // put it into the correct date format
+        $formatted_str = date("Y-d-m", strtotime($value));
+    }
+    else if (is_numeric($value)) {
+        $formatted_str = $value;
+    }
+    else if (is_string($value)) {
+        $formatted_str = '\'' . $value . '\'';
+    }
+    else {
+        echo "WE HAVE A BIG PROBLEM";
+        echo "Unknown value $value";
+    }
+    return $formatted_str;
 }
 
 
 // values
 // TODO: make this take types into account
-function vals_query_str($vals, $con) {
+function query_str($elements, callable $apply = null) {
     $str = "(";
     $i = 0;
-    $count = count($vals);
+    $count = count($elements);
 
-    foreach ($vals as $v) {
-        // form the $n
-        if ($v == null) {
-            $str = $str . "null";
+    foreach ($elements as $elem) {
+        if ($apply != null) {
+            $str = $str . $apply($elem);
         }
-        elseif (isDate($v) == true) {
-            // put it into the correct date format
-            $date = date("Y-d-m", strtotime($v));
-            $str = $str . $date;
+        else {
+            $str = $str . $elem;
         }
-        else if (is_numeric($v)) {
-            $str = $str . $v;
-        }
-        else if (is_string($v)) {
-            //$str = $str . mysqli_real_escape_string($v, $con);
-            $str = $str . '\'' . $v . '\'';
-        }
-
         // put a comma after every value but the last
         if ( $i < $count - 1) {
             $str = $str . ", ";
@@ -127,31 +168,6 @@ function vals_query_str($vals, $con) {
     return $str;
 }
 
-function fields_query_str($fields) {
-    $str = "(";
-    $i = 0;
-    $count = count($fields);
-    foreach ($fields as $f) {
-        $str = $str . $f;
-        // put a comma after every value but the last
-        if ( $i < $count - 1) {
-            $str = $str . ", ";
-        }
-        $i = $i + 1;
-    }
-    $str = $str . ")";
-    return $str;
-
-}
-
-// inserts the given data into the assessment_data table under the given field names
-function insertAssessmentData($values, $fields, $con) {
-    // form the first part of the query
-    $sql = "INSERT INTO assessment_data " . $fields . " VALUES " . $values . ";";
-    $result = mysqli_query($con, $sql);
-    var_dump($sql);
-    var_dump($result);
-}
 
 // Todo: include post in purpose statement
 // purp: returns an array containing the input fields from the given number
@@ -184,6 +200,7 @@ function validate(callable $isValid, $array) {
             //echo("$elem is valid");
         }
     }
+    return $validArray;
 }
 
 // TODO: check if this throws an error if it is of the wrong type

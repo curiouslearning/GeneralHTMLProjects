@@ -122,6 +122,7 @@
         }
     </script>
 <div class="container-fluid">
+    <form action="readdata.php" method="post">
     <div class="table-responsive" id="table_div">
         <img src="loader.gif" id="loading_indicator" name="loading_indicator">
         <table class="table table-bordered table-striped dataTable" id="assessment_table" name="assessment_table">
@@ -161,7 +162,9 @@
         <button type="button" class="btn btn-primary" id="submit_button" onclick="submitAnnimation();">Submit</button>
         <button type="button" class="btn btn-primary" onclick="addRow();">Add Row</button>
         <button type="button" class="btn btn-primary" onclick="submitAnnimation();">Annimate</button>
+        <input type="submit" id="submit">
     </div>
+    </form>
 </div>
 
 </body>
