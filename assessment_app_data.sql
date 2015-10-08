@@ -10,30 +10,29 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping database structure for phase_one_data
-CREATE DATABASE IF NOT EXISTS `phase_one_data` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `phase_one_data`;
+-- Dumping database structure for tablet_data
+CREATE DATABASE IF NOT EXISTS `tablet_data` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `tablet_data`;
 
 
--- Dumping structure for table phase_one_data.assessment_app_data
-CREATE TABLE IF NOT EXISTS `assessment_app_data` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
-  `fun_file_id` int(11) NOT NULL COMMENT 'id in funf_file table',
-  `device_id` int(11) NOT NULL COMMENT 'id in device table',
-  `visual_stimuli` text COMMENT 'Filename of visual assets',
-  `audio_stumuli` text COMMENT 'Filename of audio assets',
-  `category` text NOT NULL COMMENT 'One group from the question categories',
-  `target_stimuli` text NOT NULL COMMENT 'Filename of the asset',
-  `question_time_to_first_touch` decimal(10,0) NOT NULL COMMENT 'Time from the question appearing on the screen to the first touch',
-  `first_touch_to_answer_time` decimal(10,0) NOT NULL COMMENT 'Time from the first touch on the screen until the answer is selected',
-  `answer_type` text NOT NULL COMMENT 'Either: Correct, Incorrect, or Timeout',
-  `created_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Date and time when the row was created',
-  `modified_on` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'Date and time when the row was updated',
-  PRIMARY KEY (`id`),
-  KEY `fk_device_assessment_app_data_idx` (`device_id`),
-  KEY `fk_funf_file_assessment_app_data_idx` (`fun_file_id`),
-  CONSTRAINT `fk_device_assessment_app_data` FOREIGN KEY (`device_id`) REFERENCES `device` (`id`),
-  CONSTRAINT `fk_funf_file_assessment_app_data` FOREIGN KEY (`fun_file_id`) REFERENCES `funf_file` (`id`)
+-- Dumping structure for table tablet_data.foreign_site_child_analysis
+CREATE TABLE IF NOT EXISTS `foreign_site_child_analysis` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(50) NOT NULL,
+  `assesment_phase` varchar(25) NOT NULL,
+  `age` varchar(20) DEFAULT '0',
+  `gender` varchar(6) NOT NULL DEFAULT 'NA',
+  `receptive_vocabulary` smallint(6) DEFAULT '0',
+  `letter_name_identification_in_alphabetical_order` smallint(6) DEFAULT '0',
+  `letter_name_identification_in_random_order` smallint(6) DEFAULT '0',
+  `sound_letter_identification` smallint(6) DEFAULT '0',
+  `decodeable_words_and_sight_words` smallint(6) DEFAULT '0',
+  `phonological_awareness_rhyming` smallint(6) DEFAULT '0',
+  `phonological_awareness_blending` smallint(6) DEFAULT '0',
+  `phonological_awareness_non_word_repetition` smallint(6) DEFAULT '0',
+  `total_score` smallint(6) DEFAULT '0',
+  `percentage` decimal(10,7) DEFAULT '0.0000000',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
