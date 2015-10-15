@@ -1,7 +1,6 @@
 <?php
 require_once('transporter.php');
-
-// TODO: should put this into a function
+require_once('readdata.config.php');
 
 ?>
 <div class="alert alert-success fade in" id="success_alert">
@@ -10,30 +9,11 @@ require_once('transporter.php');
 </div>
 <?php
 
-
-// names of fields in input form
-define('TABLE_NAME', 'foreign_site_child_analysis');
-define('STUDENT_ID_NAME', 'student_id');
-define('ASSESSMENT_PHASE_NAME', 'assessment_phase');
-define('AGE_NAME', 'age');
-define('GENDER_NAME', 'gender');
-define('TESTING_DATE_NAME', 'testing_date');
-define('RECEPTIVE_VOCAB_NAME', 'receptive_vocab');
-define('LETTER_ID_ALPHABETICAL_NAME', 'letter_id_alpha');
-define('LETTER_ID_RANDOM_NAME', 'letter_id_rand');
-define('SOUND_LETTER_ID_NAME', 'sound_letter_id');
-define('DECODABLE_SIGHT_WORDS_NAME', 'dec_sight_words');
-define('RHYMING_NAME', 'rhyming');
-define('BLENDING_NAME', 'blending');
-define('NONWORD_REPETITION_NAME', 'nonword_rep');
-define('COMMENTS_NAME', 'comments');
-define('ROWS_NAME', 'table_rows');
-
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 
 function main() {
-    $rows = 1; //$_POST[ROWS_NAME];
+    $rows = $_POST[ROWS_NAME];
 
     // collect student ids
     $studentIDArray = collectInputs($rows, STUDENT_ID_NAME, null);
@@ -88,21 +68,15 @@ function main() {
     $testingDateArray = collectInputs($rows, TESTING_DATE_NAME, null);
     $testingDateArray = validate("isDate", $testingDateArray);
 
-    $totalScoreArray = array();
-    $recepVocabScoreArray, $alphaLetterIDArray, $randomLetterIDArray, $soundLetterIDArray,
+    $commentArray = collectInputs($rows, COMMENTS_NAME, null);
+
+    $tests = array($recepVocabScoreArray, $alphaLetterIDArray, $randomLetterIDArray, $soundLetterIDArray,
                     $decSightWordScoreArray, $rhymingScoreArray, $blendingScoreArray, $nonwordRepScoreArray);
-    for ($i = 0; $i < $rows; $i++) {
-        $total = 0;
-        foreach ($)
 
-        $totalScoreArray[$i] = $recepVocabScoreArray[$i] + $alphaLetterIDArray[$i] +
-                               $randomLetterIDArray[$i] + $soundLetterIDArray[$i] + $decSightWordScoreArray[$i] + $rhymingScoreArray[$i] + $blendingScoreArray[$i] + $nonwordRepScoreArray[$i];
-    }
+    $totalScoreArray = getTotalScores($tests, $rows);
 
-    // comments dont need to be validated
-    $commentArray = collectInputs($rows, COMMENTS_NAME);
+    $percentageScoreArray = getPercentageScores($totalScoreArray, $rows);
 
-    // TODO: fix last two columns and put these field names in config
     // dict with field names in table and data rows for fields
     $assessmentData = array(
         "student_id" => $studentIDArray,
@@ -119,12 +93,34 @@ function main() {
         "phonological_awareness_blending" => $blendingScoreArray,
         "phonological_awareness_non_word_repetition" => $nonwordRepScoreArray,
         "comments" => $commentArray,
-        //"total_score" => , TODO: put these in
-        //"percentage" => ,
+        "total_score" => $totalScoreArray,
+        "percentage" => $percentageScoreArray,
     );
 
     insertAssessmentData($assessmentData, $rows);
     checkInsertionSuccess($assessmentData, $rows);
+}
+
+
+function getPercentageScores($totalScores, $rows) {
+    $percentScores = array();
+    for ($i = 0; $i < $rows; $i++) {
+        $percentScores[$i] = ($totalScores[$i] / MAX_TOTAL_SCORE) * 100;
+    }
+    return $percentScores;
+}
+
+
+function getTotalScores($tests, $rows) {
+    $totalScores = array();
+    for ($i = 0; $i < $rows; $i++) {
+        $total = 0;
+        foreach ($tests as $scores) {
+            $total = $total + $scores[$i];
+        }
+        $totalScores[$i] = $total;
+    }
+    return $totalScores;
 }
 
 
@@ -165,7 +161,7 @@ function checkInsertionSuccess($data, $rows) {
 }
 
 
-// purp: inserts the given data into the assessment_data table under the given field names
+// inserts the given data into the assessment_data table under the given field names
 function insertAssessmentData($field_data_dict, $numRows) {
     $transporter = new Transporter();
     $db = $transporter->dbConnectPdo();
@@ -183,12 +179,10 @@ function insertAssessmentData($field_data_dict, $numRows) {
         // form the first part of the query
         $sql = "INSERT INTO " . TABLE_NAME . " " . $fieldStr . " VALUES " . $valsStr . ";";
         $statement = $db->prepare($sql);
-        var_dump($sql);
         $result = $statement->execute();
-        var_dump($result);
-        # TODO: print some sort of error message saying it wasn't inserted
+
         if ($result == false) {
-            print($db->errorInfo());
+            print_r($db->errorInfo());
         }
     }
     // make space
@@ -207,11 +201,10 @@ function format_value($value) {
         $formattedStr = '\'' . $formattedStr . '\'';
     }
     else if (is_numeric($value) or is_string($value)) {
-        $formattedStr = $value;
+        $formattedStr = '\'' . $value . '\'';
     }
-    else { // TODO: make something better here
-        echo "WE HAVE A BIG PROBLEM";
-        echo "Unknown value $value";
+    else {
+        die("unrecognized value");
     }
     return $formattedStr;
 }
@@ -240,9 +233,6 @@ function queryStr($elements, callable $apply = null) {
 }
 
 
-// purp: returns an array containing the input fields from the given number
-// of rows in the table belonging to the field with the given field name
-// args: numer of rows to take input from,
 function collectInputs($numRows, $fieldName, $default) {
     $inputArray = array();
     for ($i = 0; $i < $numRows; $i++) {
@@ -258,17 +248,15 @@ function collectInputs($numRows, $fieldName, $default) {
 }
 
 
-// purp: returns an array where all invalid elements in the given array are null
+// returns an array where all invalid elements in the given array are null
 function validate(callable $isValid, $array) {
     $validArray = array();
     foreach ($array as $elem) {
         if ($isValid($elem) == true or $elem == null) {
             array_push($validArray, $elem);
-            //echo("$elem is not valid");
         }
         else {
             array_push($validArray, null);
-            //echo("$elem is valid");
         }
     }
     return $validArray;
@@ -295,6 +283,5 @@ function validateDate($date, $format = 'm-d-Y') {
 
 main();
 
-?>
 
 

@@ -1,23 +1,7 @@
 <?php
-include_once("transporter.php");
+include_once("assessment_table.util.php");
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
-
-// returns an array containing every row in the
-function getAssessmentInfo() {
-    // create a query to get all rows in the table
-    // not sure how they want use to do this
-    $assessmentArray = null;
-    $db = new PDO('mysql:dbname=tablet_data;host=localhost;port=8889', 'root', 'root');
-    $query = "SELECT * from assessment_info_temp;";
-    $statement = $db->prepare($query);
-    $statement->execute();
-    $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-    if ($rows != false) {
-        $assessmentArray = $rows;
-    }
-    return $assessmentArray;
-}
 ?>
 
 
