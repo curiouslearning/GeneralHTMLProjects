@@ -1,5 +1,6 @@
 <?php
 require_once('transporter.php');
+
 // TODO: should put this into a function
 
 ?>
@@ -9,84 +10,117 @@ require_once('transporter.php');
 </div>
 <?php
 
-define('TABLE_NAME', "foreign_site_child_analysis");
-define('ID_NAME', "id");
-define('BIRTH_DATE_NAME', 'birth_date');
+
+// names of fields in input form
+define('TABLE_NAME', 'foreign_site_child_analysis');
+define('STUDENT_ID_NAME', 'student_id');
+define('ASSESSMENT_PHASE_NAME', 'assessment_phase');
+define('AGE_NAME', 'age');
+define('GENDER_NAME', 'gender');
 define('TESTING_DATE_NAME', 'testing_date');
-define('SCORING_DATE_NAME', 'scoring_date');
 define('RECEPTIVE_VOCAB_NAME', 'receptive_vocab');
-define('LETTER_ID_NAME', 'letter_id');
-define('DEC_SIGHT_WORDS_NAME', 'dec_sight_words');
+define('LETTER_ID_ALPHABETICAL_NAME', 'letter_id_alpha');
+define('LETTER_ID_RANDOM_NAME', 'letter_id_rand');
+define('SOUND_LETTER_ID_NAME', 'sound_letter_id');
+define('DECODABLE_SIGHT_WORDS_NAME', 'dec_sight_words');
 define('RHYMING_NAME', 'rhyming');
 define('BLENDING_NAME', 'blending');
-define('NONWORD_REP_NAME', 'nonword_rep');
+define('NONWORD_REPETITION_NAME', 'nonword_rep');
 define('COMMENTS_NAME', 'comments');
 define('ROWS_NAME', 'table_rows');
 
 ini_set('display_errors', 'On');
-//error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL | E_STRICT);
 
 function main() {
-    $rows = $_POST[ROWS_NAME];
+    $rows = 1; //$_POST[ROWS_NAME];
 
-    // collect ids
-    $idArray = collectInputs($rows, ID_NAME);
-    $idArray = validate("is_numeric", $idArray);
+    // collect student ids
+    $studentIDArray = collectInputs($rows, STUDENT_ID_NAME, null);
+    $studentIDArray = validate("is_numeric", $studentIDArray);
+
+    // TODO: check if this is the correct validataion
+    // collect assessment_phases
+    $assessmentPhaseArray = collectInputs($rows, ASSESSMENT_PHASE_NAME, null);
+    $assessmentPhaseArray = validate("is_string", $assessmentPhaseArray);
+
+    // collect ages
+    $ageArray = collectInputs($rows, AGE_NAME, null);
+    $ageArray = validate("is_numeric", $ageArray);
+
+    // collect genders
+    $genderArray = collectInputs($rows, GENDER_NAME, null);
+    $genderArray = validate("is_string", $genderArray);
+
+    // receptive vocab score
+    $recepVocabScoreArray = collectInputs($rows, RECEPTIVE_VOCAB_NAME, 0);
+    $recepVocabScoreArray = validate("is_numeric", $recepVocabScoreArray);
+
+    // letter name id alphabetical score
+    $alphaLetterIDArray = collectInputs($rows, LETTER_ID_ALPHABETICAL_NAME, 0);
+    $alphaLetterIDArray = validate("is_numeric", $alphaLetterIDArray);
+
+    // letter name id random score
+    $randomLetterIDArray = collectInputs($rows, LETTER_ID_RANDOM_NAME, 0);
+    $randomLetterIDArray = validate("is_numeric", $randomLetterIDArray);
+
+    // sound letter id
+    $soundLetterIDArray = collectInputs($rows, SOUND_LETTER_ID_NAME, 0);
+    $soundLetterIDArray = validate("is_numeric", $soundLetterIDArray);
+
+    // dec sight word score
+    $decSightWordScoreArray = collectInputs($rows, DECODABLE_SIGHT_WORDS_NAME, 0);
+    $decSightWordScoreArray = validate("is_numeric", $decSightWordScoreArray);
 
     // rhymiung score
-    $rhymingScoreArray = collectInputs($rows, RHYMING_NAME);
-    //echo(print_r($rhymingScoreArray, true));
+    $rhymingScoreArray = collectInputs($rows, RHYMING_NAME, 0);
     $rhymingScoreArray = validate("is_numeric", $rhymingScoreArray);
 
     // blending scores
-    $blendingScoreArray = collectInputs($rows, BLENDING_NAME);
+    $blendingScoreArray = collectInputs($rows, BLENDING_NAME, 0);
     $blendingScoreArray = validate("is_numeric", $blendingScoreArray);
 
     // nonwordRep scores
-    $nonwordRepScoreArray = collectInputs($rows, NONWORD_REP_NAME);
+    $nonwordRepScoreArray = collectInputs($rows, NONWORD_REPETITION_NAME, 0);
     $nonwordRepScoreArray = validate("is_numeric", $nonwordRepScoreArray);
 
-    // receptive vocab score
-    $recepVocabScoreArray = collectInputs($rows, RECEPTIVE_VOCAB_NAME);
-    $recepVocabScoreArray = validate("is_numeric", $recepVocabScoreArray);
-
-    // letter id score
-    $letterIDScoreArray = collectInputs($rows, LETTER_ID_NAME);
-    $letterIDScoreArray = validate("is_numeric", $letterIDScoreArray);
-
-    // dec sight word score
-    $decSightWordScoreArray = collectInputs($rows, DEC_SIGHT_WORDS_NAME);
-    $decSightWordScoreArray = validate("is_numeric", $decSightWordScoreArray);
-
-    // collect birthdays
-    $birthdayArray = collectInputs($rows, BIRTH_DATE_NAME);
-    $birthdayArray = validate("isDate", $birthdayArray);
-
     // testing dates
-    $testingDateArray = collectInputs($rows, TESTING_DATE_NAME);
+    $testingDateArray = collectInputs($rows, TESTING_DATE_NAME, null);
     $testingDateArray = validate("isDate", $testingDateArray);
 
-    // scoring dates
-    $scoringDateArray = collectInputs($rows, SCORING_DATE_NAME);
-    $scoringDateArray = validate("isDate", $scoringDateArray);
+    $totalScoreArray = array();
+    $recepVocabScoreArray, $alphaLetterIDArray, $randomLetterIDArray, $soundLetterIDArray,
+                    $decSightWordScoreArray, $rhymingScoreArray, $blendingScoreArray, $nonwordRepScoreArray);
+    for ($i = 0; $i < $rows; $i++) {
+        $total = 0;
+        foreach ($)
+
+        $totalScoreArray[$i] = $recepVocabScoreArray[$i] + $alphaLetterIDArray[$i] +
+                               $randomLetterIDArray[$i] + $soundLetterIDArray[$i] + $decSightWordScoreArray[$i] + $rhymingScoreArray[$i] + $blendingScoreArray[$i] + $nonwordRepScoreArray[$i];
+    }
 
     // comments dont need to be validated
     $commentArray = collectInputs($rows, COMMENTS_NAME);
 
-    // TODO: the names given in the table they have don't match the ones on my form
+    // TODO: fix last two columns and put these field names in config
     // dict with field names in table and data rows for fields
     $assessmentData = array(
-        "id" => $idArray,
+        "student_id" => $studentIDArray,
+        "assessment_phase" => $assessmentPhaseArray,
+        "age" => $ageArray,
+        "testing_date" => $testingDateArray,
+        "gender" => $genderArray,
+        "receptive_vocabulary" => $recepVocabScoreArray,
+        "letter_name_identification_in_alphabetical_order" => $alphaLetterIDArray,
+        "letter_name_identification_in_random_order" => $randomLetterIDArray,
+        "sound_letter_identification" => $soundLetterIDArray,
+        "decodeable_words_and_sight_words" => $decSightWordScoreArray,
         "phonological_awareness_rhyming" => $rhymingScoreArray,
         "phonological_awareness_blending" => $blendingScoreArray,
         "phonological_awareness_non_word_repetition" => $nonwordRepScoreArray,
-        "receptive_vocabulary" => $recepVocabScoreArray,
-        "letter_name_identification_in_alphabetical_order" => $letterIDScoreArray, // TODO: is this alphabetical or non alphabetical order?
-        "decodeable_words_and_sight_words" => $decSightWordScoreArray
-        //"birth_date" => $birthdayArray, TODO: see if this should be age varchar
-        //"testing_date" => $testingDateArray, TODO: see if this should be in there
-        //"scoring_date" => $scoringDateArray,TODO: see if this should be in there
-        //"comments" => $commentArray TODO: see if this should be in there
+        "comments" => $commentArray,
+        //"total_score" => , TODO: put these in
+        //"percentage" => ,
     );
 
     insertAssessmentData($assessmentData, $rows);
@@ -97,8 +131,9 @@ function main() {
 // checks that all of our assessmentData was inserted into mysql
 function checkInsertionSuccess($data, $rows) {
     $success = true;
-    $db = new PDO('mysql:dbname=tablet_data;host=localhost;port=8889', 'root', 'root');
     $count = count($data);
+    $transporter = new Transporter();
+    $db = $transporter->dbConnectPdo();
 
     for ($i = 0; $i < $rows; $i++) {
         $sql = 'SELECT * from foreign_site_child_analysis WHERE ';
@@ -117,7 +152,6 @@ function checkInsertionSuccess($data, $rows) {
             }
             $j = $j + 1;
         }
-        // TODO: MAKE THIS HOW THEY WANT
         $sql = $sql . ';';
         $statement = $db->prepare($sql);
         $statement->execute();
@@ -131,17 +165,14 @@ function checkInsertionSuccess($data, $rows) {
 }
 
 
-
-// TODO: include table name somehow
-// inserts the given data into the assessment_data table under the given field names
+// purp: inserts the given data into the assessment_data table under the given field names
 function insertAssessmentData($field_data_dict, $numRows) {
     $transporter = new Transporter();
-    // get the names of the fields we are inserting into
+    $db = $transporter->dbConnectPdo();
 
     $fieldStr = queryStr(array_keys($field_data_dict));
-    // go through each row in the table
 
-    var_dump($numRows);
+    // go through each row in the table
     for ($i = 0; $i < $numRows; $i++) {
         $values = array();
         // collect all values from that row
@@ -151,8 +182,14 @@ function insertAssessmentData($field_data_dict, $numRows) {
         $valsStr = queryStr($values, "format_value");
         // form the first part of the query
         $sql = "INSERT INTO " . TABLE_NAME . " " . $fieldStr . " VALUES " . $valsStr . ";";
+        $statement = $db->prepare($sql);
         var_dump($sql);
-        $result = $transporter->sendQuery($sql); // TODO: don't capture this if you don't need it
+        $result = $statement->execute();
+        var_dump($result);
+        # TODO: print some sort of error message saying it wasn't inserted
+        if ($result == false) {
+            print($db->errorInfo());
+        }
     }
     // make space
     $transporter = null;
@@ -166,15 +203,13 @@ function format_value($value) {
     }
     elseif (isDate($value) == true) {
         // put it into the correct date format
-        $formattedStr = date("Y-d-m", strtotime($value));
+        $formattedStr = date("Y-m-d", strtotime($value));
+        $formattedStr = '\'' . $formattedStr . '\'';
     }
-    else if (is_numeric($value)) {
+    else if (is_numeric($value) or is_string($value)) {
         $formattedStr = $value;
     }
-    else if (is_string($value)) {
-        $formattedStr = '\'' . $value . '\'';
-    }
-    else {
+    else { // TODO: make something better here
         echo "WE HAVE A BIG PROBLEM";
         echo "Unknown value $value";
     }
@@ -182,8 +217,6 @@ function format_value($value) {
 }
 
 
-// values
-// TODO: make this take types into account
 function queryStr($elements, callable $apply = null) {
     $str = "(";
     $i = 0;
@@ -207,11 +240,10 @@ function queryStr($elements, callable $apply = null) {
 }
 
 
-// Todo: include post in purpose statement
 // purp: returns an array containing the input fields from the given number
 // of rows in the table belonging to the field with the given field name
 // args: numer of rows to take input from,
-function collectInputs($numRows, $fieldName) {
+function collectInputs($numRows, $fieldName, $default) {
     $inputArray = array();
     for ($i = 0; $i < $numRows; $i++) {
         if(isset($_POST["$fieldName$i"]) and $_POST["$fieldName$i"] != "") {
@@ -219,11 +251,12 @@ function collectInputs($numRows, $fieldName) {
             array_push($inputArray, $_POST["$fieldName$i"]);
         }
         else {
-            array_push($inputArray, null);
+            array_push($inputArray, $default);
         }
     }
     return $inputArray;
 }
+
 
 // purp: returns an array where all invalid elements in the given array are null
 function validate(callable $isValid, $array) {
@@ -241,7 +274,7 @@ function validate(callable $isValid, $array) {
     return $validArray;
 }
 
-// TODO: check if this throws an error if it is of the wrong type
+
 // returns true if the the given string describes a valid date in one
 // of the following two formats: mm/dd/yyyy  or yyyy-dd-mm
 function isDate($str) {
@@ -253,7 +286,7 @@ function isDate($str) {
     }
 }
 
-// TODO: acknowledge taken from online
+
 function validateDate($date, $format = 'm-d-Y') {
     $d = DateTime::createFromFormat($format, $date);
     return $d;
