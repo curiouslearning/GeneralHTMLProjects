@@ -11,7 +11,7 @@ $rows = $_POST[ROWS_NAME];
 // collect student ids
 $studentIDArray = collectInputs($rows, STUDENT_ID_NAME, null);
 //$studentIDArray = validate("is_numeric", $studentIDArray);
-if(!validate("is_numeric", $studentIDArray))
+if(!validate("is_string", $studentIDArray))
     return sendErrorMessage("ID error");
 
 

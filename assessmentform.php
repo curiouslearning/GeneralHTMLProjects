@@ -86,7 +86,7 @@
         }
 
         function addRow() {
-            var row = '<tr><td class=" "><input class="form-control" type="number"   id="student_id"   name="student_id" ></td> \
+            var row = '<tr><td class=" "><input class="form-control" type="text"   id="student_id"   name="student_id" ></td> \
                        <td class=" "><input class="form-control" type="text"   id="assessment_phase" name="assessment_phase" ></td> \
                        <td class=" "><input class="form-control" type="number" id="age"              name="age" ></td> \
                        <td class=" "><select class="form-control" type="text"   id="gender"           name="gender" ><option disabled selected> -- select -- </option><option value="M">M</option><option value="F">F</option></select></td> \
@@ -145,7 +145,7 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td class=" "><input class="form-control" type="number" id="student_id0"       name="student_id0" ></td>
+                                        <td class=" "><input class="form-control" type="text" id="student_id0"       name="student_id0" ></td>
                                         <td class=" "><input class="form-control" type="text"   id="assessment_phase0" name="assessment_phase0" ></td>
                                         <td class=" "><input class="form-control" type="number" id="age0"              name="age0" ></td>
                                         <td class=" "><select class="form-control" type="text"   id="gender0"          name="gender0" ><option disabled selected> -- select -- </option><option value="M">M</option><option value="F">F</option></select></td>
