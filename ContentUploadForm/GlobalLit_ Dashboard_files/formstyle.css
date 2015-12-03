@@ -23,3 +23,17 @@ form {
 #enroll {
 	margin-right: 30px;
 }
+
+#file {
+	display: inline-block;
+}
+
+#submit{
+	display: block;
+	margin-top: 20px;
+
+}
+
+#upload{
+	margin-left: 20px;
+}
