@@ -202,11 +202,11 @@ Curious Learning
                                     <input type="radio" name="selection"> All the time -- (you can give it away) <br><br>
                                     <input type="radio" name="selection"> In U.S. title 1 schools (http://www2.ed.gov/programs/titleiparta/index.html) <br><br>
                                     <input type="radio" name="selection"> Everywhere but U.S. and Europe<br><br>
-                                    <input id="customize" type="radio" name="selection"> Customize <br><br>
+                                    <input class="customize" type="radio" name="selection"> Customize <br><br>
 
                                     <h2>Customize Sharing by Country</h2><br>
                                     I wish to donate my content in the following regions
-                                    <div id="tree-container" ></div>
+                                    <div id="tree-container" style="display: none;" ></div>
                                     <br>
                                     <br>
                                     <br>
@@ -226,7 +226,6 @@ Curious Learning
                                 </form>       
 
                                 <script>
-                                console.log("got here");
                                   $(".maxcopies").keypress(function(e){ //TEST THIS!!!
                                     if(e.which > 47 && e.which < 66){
                                       return;
@@ -245,14 +244,14 @@ Curious Learning
                                     }
                                   });
 
-                                  console.log("got here as well1");
-                                  console.log(document.getElementById("#hello").text());
+                    
 
-                                  $("#customize").click(function(){
-                                    console.log("got here as well");
+                                $(document).ready(function(){
+                                    $(".customize").on('ifChecked', function(event){
+                                        $("#tree-container").toggle("show");
 
-                                    $("#tree-container").toggle("hide");
-                                  });
+                                    })
+                                });
 
                                   var continents = {
                                     "Africa": {
@@ -288,46 +287,104 @@ Curious Learning
                                       }]
                                     }
                                   };
-                                  //console.log(continents);
-                                  //console.log(continents["Africa"]["Eastern Africa"][0]);
 
-                                var continents_list = [];
-                                 var areas = [];
-                                 var countries = [];
-                                  for(var key in continents){
-                                      //console.log(key);
-                                      continents_list.push(key);
-                                      console.log(continents[key]);
-                                      for(var key in continents[key]){
-                                      //  console.log(continents[key][key]);
-                                        console.log(key);
-                                      }
-                                      areas.push(continents[key]);
-                                  }
-                                  for (i = 0; i < areas.length; i++){
-                                    for(var key in areas[i]){
-                                      //console.log(key);
-                                      countries.push(key);
-                                    };
-                                  }
+                                  var area_list = [];
+            for(key in continents){
+                console.log(key);
+                area_list.push(key);
+                for(key2 in continents[key]){
+                    console.log(key2);
+                    area_list.push(key2);
+                    for(i = 0; i < continents[key][key2].length; i++){
+                        for(key3 in continents[key][key2][i]){
+                            console.log(continents[key][key2][i][key3]);
+                            area_list.push(continents[key][key2][i][key3]);
+                        };
+                    };
+                };
+            };
+            console.log(area_list);
+
+          //  console.log(continents["Africa"]["Eastern Africa"][0]["1"]);
+
+
+
+                                // var continents_list = [];
+                                //  var areas = [];
+                                //  var countries = [];
+                                // // console.log(continents);
+                                //   for(var key in continents){
+                                //      // console.log(key);
+                                //      // continents_list.push(key);
+                                //    //  console.log(continents[key]);
+                                //       //  console.log(continents[key][0]);
+                                //       for(var key in continents[key]){
+                                //        // console.log(continents[key]);
+                                //       //  console.log(continents[key][key][0]);
+                                //       //  console.log("2nd key: " + key);
+                                //        // console.log(key[0]);
+                                //       }
+                                //       areas.push(continents[key]);
+                                //   }
+                                //   for (i = 0; i < areas.length; i++){
+                                //     for(var key in areas[i]){
+                                //       //console.log(key);
+                                //       countries.push(key);
+                                //     };
+                                //   }
 
                                   var Countries = [];
                                   Countries.push({
                                     item:{
-                                      id: i,
-                                      label: continents_list[0],
+                                      id: 'id1',
+                                      label: area_list[0],
                                       checked: true
                                     },
                                     children: [{
                                        item:{
+                                        id: 'id',
+                                        label: area_list[1],
+                                        checked: true
+                                      },
+                                      children: [{
+                                       item:{
+                                        id: 'something',
+                                        label: area_list[2],
+                                        checked: true
+                                      },
+                                    
+                                       item:{
+                                        id: 'something',
+                                        label: area_list[2],
+                                        checked: true
+                                      },
+                                        item:{
                                         id: i+1,
-                                        label: countries[0],
+                                        label: area_list[4],
                                         checked: true
                                       }
                                     },{
                                        item:{
                                         id: i+2,
-                                        label: countries[1],
+                                        label: area_list[5],
+                                        checked: true
+                                      }
+                                    }]},
+                                    {
+                                       item:{
+                                        id: i+2,
+                                        label: area_list[6],
+                                        checked: true
+                                      },
+                                        item:{
+                                        id: i+1,
+                                        label: area_list[6],
+                                        checked: true
+                                      }
+                                    },{
+                                       item:{
+                                        id: i+2,
+                                        label: area_list[4],
                                         checked: true
                                       }
                                     }]
@@ -336,19 +393,19 @@ Curious Learning
                                  Countries.push({
                                     item:{
                                       id: 'id2',
-                                      label: continents_list[1],
+                                      label: area_list[9],
                                       checked: true
                                     },
                                     children: [{
                                        item:{
                                         id: 'id21',
-                                        label: countries[2],
+                                        label: area_list[10],
                                         checked: true
                                       }
                                     },{
                                        item:{
                                         id: 'id22',
-                                        label: countries[3],
+                                        label: area_list[11],
                                         checked: true
                                       }
                                     }]
@@ -363,8 +420,8 @@ Curious Learning
             </div>
         </section>
         <div id="upload"> <h3>Upload App</h3>
-            <p>Select a file to upload</p>
-            <p>The file must be APK</p>
+            <p style="font-size: 15px; margin-bottom: 30px;">Select a file to upload:<br>
+            The file must be APK</p>
             <button>Choose File</button> <div id="file"> No File Chosen </div>
             <button id="submit">Agree and Submit</button>
         </div>

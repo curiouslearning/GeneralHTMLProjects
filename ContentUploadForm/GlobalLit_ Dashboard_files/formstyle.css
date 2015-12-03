@@ -31,7 +31,13 @@ form {
 #submit{
 	display: block;
 	margin-top: 20px;
-
+	background-color: #349EC2;
+	color: white;
+	border: 0;
+	border-radius: 3px;
+	padding: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
 }
 
 #upload{
