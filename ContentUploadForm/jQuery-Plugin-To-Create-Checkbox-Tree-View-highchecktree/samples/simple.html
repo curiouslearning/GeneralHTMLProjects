@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>jQuery highchecktree Plugin Demo</title>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="../js/highchecktree.js"></script>
+        <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="../css/highCheckTree.css"/>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <style type="text/css">
+        body { font-family:'Open Sans'; font-size:14px;}
+            #main-container{
+                width: 600px;
+                margin:  150px auto;
+            }
+            
+            #tree-container label.hover{
+                color: red;
+            }
+        </style>
+        
+    </head>
+    <body><div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="http://www.jqueryscript.net/">Download This Plugin</a></li>
+<li><a href="http://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+       <div id="main-container">
+       <h1>jQuery highchecktree Plugin Demo</h1>
+        <div id="tree-container"></div>
+       </div>
+        <script>
+            var mockData = [];
+            mockData.push({
+                item:{
+                    id: 'id1',
+                    label: 'Lorem ipsum dolor 1',
+                    checked: false
+                },
+                children: [{
+                   item:{
+                        id: 'id11',
+                        label: 'Lorem ipsum dolor 11',
+                        checked: false
+                    } 
+                },{
+                   item:{
+                        id: 'id12',
+                        label: 'Lorem ipsum dolor 12',
+                        checked: false
+                    } 
+                },{
+                   item:{
+                        id: 'id13',
+                        label: 'Lorem ipsum dolor 13',
+                        checked: false
+                    } 
+                }]
+            });
+
+            mockData.push({
+                item:{
+                    id: 'id2',
+                    label: 'Lorem ipsum dolor 2',
+                    checked: false
+                },
+                children: [{
+                   item:{
+                        id: 'id21',
+                        label: 'Lorem ipsum dolor 21',
+                        checked: false
+                    } 
+                },{
+                   item:{
+                        id: 'id22',
+                        label: 'Lorem ipsum dolor 22',
+                        checked: true
+                    } 
+                },{
+                   item:{
+                        id: 'id23',
+                        label: 'Lorem ipsum dolor 23',
+                        checked: false
+                    } 
+                }]
+            });
+
+            mockData.push({
+                item:{
+                    id: 'id3',
+                    label: 'Lorem ipsum dolor 3',
+                    checked: false
+                },
+                children: [{
+                   item:{
+                        id: 'id31',
+                        label: 'Lorem ipsum dolor 31',
+                        checked: true
+                    } 
+                },{
+                   item:{
+                        id: 'id32',
+                        label: 'Lorem ipsum dolor 32',
+                        checked: false
+                    },
+                    children: [{
+                        item:{
+                            id: 'id321',
+                            label: 'Lorem ipsum dolor 321',
+                            checked: false
+                        }
+                    },{
+                        item:{
+                            id: 'id322',
+                            label: 'Lorem ipsum dolor 322',
+                            checked: false
+                        }
+                    }]
+                }]
+            });
+
+            $('#tree-container').highCheckTree({
+                data: mockData
+            });
+        </script> 
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

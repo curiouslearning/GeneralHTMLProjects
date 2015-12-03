@@ -1,0 +1,25 @@
+.input {
+	font-size: 15px;
+	height: 30px;
+	width: 550px;
+	margin-bottom: 15px;
+	margin-top: 8px;
+}
+
+p {
+	font-size: 18px;
+}
+
+form {
+	font-size: 17px;
+}
+
+.form-control {
+	width: 550px;
+	font-size: 15px;
+	margin-bottom: 15px;
+}
+
+#enroll {
+	margin-right: 30px;
+}
