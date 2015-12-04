@@ -2,6 +2,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="js/highchecktree.js"></script>
 <link rel="stylesheet" href="css/highCheckTree.css">
+ <link rel="stylesheet" href="./GlobalLit_ Dashboard_files/directoryTree.css">
+        <script src="./GlobalLit_ Dashboard_files/directoryTree.js"></script>
 
     <form>
         App Name <br>
@@ -81,7 +83,7 @@
         $("#tree-container").toggle("show");
       });
 
-      var continents = {
+      var json = {
         "Africa": {
           "Eastern Africa": [{
             "1": "Burundi"
@@ -115,75 +117,105 @@
           }]
         }
       };
+      var continents = [];
+            var areas = [];
+            var countries = [];
+            var places = [];
+            for(key in json){
+                console.log(key);
+                continents.push(key);
+                for(key2 in json[key]){
+                    console.log(key2);
+                    areas.push(key2);
+                    for(i = 0; i < json[key][key2].length; i++){
+                        for(key3 in json[key][key2][i]){
+                            console.log(json[key][key2][i][key3]);
+                            countries.push(json[key][key2][i][key3]);
+                            places.push(key + "/" + key2 + "/" + json[key][key2][i][key3]);
+                        };
+                    };
+                };
+            };
+            console.log("continents " + continents);
+            console.log("areas " + areas);
+            console.log("countries " + countries);
+            console.log("places: " + places);
+
+            $("#tree-container").directoryTree([places, true]);
+
+
+
+
+
       //console.log(continents);
       //console.log(continents["Africa"]["Eastern Africa"][0]);
 
-    var continents_list = [];
-     var areas = [];
-     var countries = [];
-      for(var key in continents){
-          //console.log(key);
-          continents_list.push(key);
-          console.log(continents[key]);
-          for(var key in continents[key]){
-          //  console.log(continents[key][key]);
-            console.log(key);
-          }
-          areas.push(continents[key]);
-      }
-      for (i = 0; i < areas.length; i++){
-        for(var key in areas[i]){
-          //console.log(key);
-          countries.push(key);
-        };
-      }
+    // var continents_list = [];
+    //  var areas = [];
+    //  var countries = [];
+    //   for(var key in continents){
+    //       //console.log(key);
+    //       continents_list.push(key);
+    //       console.log(continents[key]);
+    //       for(var key in continents[key]){
+    //       //  console.log(continents[key][key]);
+    //         console.log(key);
+    //       }
+    //       areas.push(continents[key]);
+    //   }
+    //   for (i = 0; i < areas.length; i++){
+    //     for(var key in areas[i]){
+    //       //console.log(key);
+    //       countries.push(key);
+    //     };
+    //   }
 
-      var Countries = [];
-      Countries.push({
-        item:{
-          id: i,
-          label: continents_list[0],
-          checked: true
-        },
-        children: [{
-           item:{
-            id: i+1,
-            label: countries[0],
-            checked: true
-          }
-        },{
-           item:{
-            id: i+2,
-            label: countries[1],
-            checked: true
-          }
-        }]
-      });
+    //   var Countries = [];
+    //   Countries.push({
+    //     item:{
+    //       id: i,
+    //       label: continents_list[0],
+    //       checked: true
+    //     },
+    //     children: [{
+    //        item:{
+    //         id: i+1,
+    //         label: countries[0],
+    //         checked: true
+    //       }
+    //     },{
+    //        item:{
+    //         id: i+2,
+    //         label: countries[1],
+    //         checked: true
+    //       }
+    //     }]
+    //   });
 
-     Countries.push({
-        item:{
-          id: 'id2',
-          label: continents_list[1],
-          checked: true
-        },
-        children: [{
-           item:{
-            id: 'id21',
-            label: countries[2],
-            checked: true
-          }
-        },{
-           item:{
-            id: 'id22',
-            label: countries[3],
-            checked: true
-          }
-        }]
-      });
+    //  Countries.push({
+    //     item:{
+    //       id: 'id2',
+    //       label: continents_list[1],
+    //       checked: true
+    //     },
+    //     children: [{
+    //        item:{
+    //         id: 'id21',
+    //         label: countries[2],
+    //         checked: true
+    //       }
+    //     },{
+    //        item:{
+    //         id: 'id22',
+    //         label: countries[3],
+    //         checked: true
+    //       }
+    //     }]
+    //   });
 
-      $("#tree-container").highCheckTree({
-          data: Countries
-      });
+    //   $("#tree-container").highCheckTree({
+    //       data: Countries
+    //   });
     </script>
 
 

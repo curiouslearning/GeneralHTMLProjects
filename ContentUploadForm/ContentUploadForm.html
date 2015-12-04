@@ -37,6 +37,12 @@
         <!-- checkbox tree style -->
         <link rel="stylesheet" href="./GlobalLit_ Dashboard_files/highCheckTree.css">
 
+        <link rel="stylesheet" href="./GlobalLit_ Dashboard_files/directoryTree.css">
+        <script src="./GlobalLit_ Dashboard_files/directoryTree.js"></script>
+
+
+
+
 
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -196,17 +202,18 @@ Curious Learning
 
                                     Total number of copies granted for research <br>
                                     (min 2,000 -- recommended 10,000) <br>
-                                    <input class="input" id= "totalcopies" type="text"> <br>
+                                    <input class="input" id="totalcopies" type="text"> <br>
 
                                     In addition to the above research copies, when can we donate you app? <br><br>
                                     <input type="radio" name="selection"> All the time -- (you can give it away) <br><br>
                                     <input type="radio" name="selection"> In U.S. title 1 schools (http://www2.ed.gov/programs/titleiparta/index.html) <br><br>
                                     <input type="radio" name="selection"> Everywhere but U.S. and Europe<br><br>
-                                    <input class="customize" type="radio" name="selection"> Customize <br><br>
-
-                                    <h2>Customize Sharing by Country</h2><br>
-                                    I wish to donate my content in the following regions
-                                    <div id="tree-container" style="display: none;" ></div>
+                                   <input class="toggle" type="radio" name="selection"> Customize <br><br>
+                                    <div class="customize" style="display: none;">
+                                        <h2>Customize Sharing by Country</h2><br>
+                                        I wish to donate my content in the following regions
+                                        <div id="tree-container"></div>
+                                    </div>
                                     <br>
                                     <br>
                                     <br>
@@ -226,7 +233,7 @@ Curious Learning
                                 </form>       
 
                                 <script>
-                                  $(".maxcopies").keypress(function(e){ //TEST THIS!!!
+                                  $("#maxcopies").keypress(function(e){ //TEST THIS!!!
                                     if(e.which > 47 && e.which < 66){
                                       return;
                                     }
@@ -235,7 +242,7 @@ Curious Learning
                                     }
                                   });
 
-                                  $(".maxcopies").keypress(function(e){
+                                  $("#totalcopies").keypress(function(e){
                                     if(e.which > 47 && e.which < 66){
                                       return;
                                     }
@@ -244,16 +251,14 @@ Curious Learning
                                     }
                                   });
 
-                    
 
                                 $(document).ready(function(){
-                                    $(".customize").on('ifChecked', function(event){
-                                        $("#tree-container").toggle("show");
-
+                                    $(".toggle").on('ifChecked', function(event){
+                                        $(".customize").toggle("show");
                                     })
                                 });
 
-                                  var continents = {
+                                  var json = {
                                     "Africa": {
                                       "Eastern Africa": [{
                                         "1": "Burundi"
@@ -288,132 +293,149 @@ Curious Learning
                                     }
                                   };
 
-                                  var area_list = [];
-            for(key in continents){
-                console.log(key);
-                area_list.push(key);
-                for(key2 in continents[key]){
-                    console.log(key2);
-                    area_list.push(key2);
-                    for(i = 0; i < continents[key][key2].length; i++){
-                        for(key3 in continents[key][key2][i]){
-                            console.log(continents[key][key2][i][key3]);
-                            area_list.push(continents[key][key2][i][key3]);
+
+                      
+
+            var continents = [];
+            var areas = [];
+            var countries = [];
+            var places = [];
+            for(key in json){
+               // console.log(key);
+                continents.push(key);
+                for(key2 in json[key]){
+                  //  console.log(key2);
+                    areas.push(key2);
+                    for(i = 0; i < json[key][key2].length; i++){
+                        for(key3 in json[key][key2][i]){
+                         //   console.log(json[key][key2][i][key3]);
+                            countries.push(json[key][key2][i][key3]);
+                            places.push(key + "/" + key2 + "/" + json[key][key2][i][key3]);
                         };
                     };
                 };
             };
-            console.log(area_list);
+            // console.log("continents " + continents);
+            // console.log("areas " + areas);
+            // console.log("countries " + countries);
+            // console.log("places: " + places);
 
-          //  console.log(continents["Africa"]["Eastern Africa"][0]["1"]);
+        
 
+            //                     var array = [];
+            //                     for(var i = 0; i < continents.length; i++){
+            //                         array.push(continents[i]);
+            //                         for(var j = 0; j < areas.length; j++){
+            //                             array.push(areas[j]);
+            //                             for(var k = 0; k < countries.length; k++){
+            //                                 array.push(countries[k]);
+            //                             };
+            //                         };
+            //                     };
+            //                     console.log("total: " + array);
 
-
-                                // var continents_list = [];
-                                //  var areas = [];
-                                //  var countries = [];
-                                // // console.log(continents);
-                                //   for(var key in continents){
-                                //      // console.log(key);
-                                //      // continents_list.push(key);
-                                //    //  console.log(continents[key]);
-                                //       //  console.log(continents[key][0]);
-                                //       for(var key in continents[key]){
-                                //        // console.log(continents[key]);
-                                //       //  console.log(continents[key][key][0]);
-                                //       //  console.log("2nd key: " + key);
-                                //        // console.log(key[0]);
-                                //       }
-                                //       areas.push(continents[key]);
-                                //   }
-                                //   for (i = 0; i < areas.length; i++){
-                                //     for(var key in areas[i]){
-                                //       //console.log(key);
-                                //       countries.push(key);
-                                //     };
-                                //   }
+            //                     var something  = "string";
+            //                     var first = "item: {id: 'id1',label: countries[0],checked: true},";
 
                                   var Countries = [];
                                   Countries.push({
                                     item:{
                                       id: 'id1',
-                                      label: area_list[0],
+                                      label: countries[0],
                                       checked: true
                                     },
                                     children: [{
                                        item:{
                                         id: 'id',
-                                        label: area_list[1],
+                                        label: countries[1] + "hellow",
                                         checked: true
                                       },
                                       children: [{
                                        item:{
                                         id: 'something',
-                                        label: area_list[2],
+                                        label: countries[2],
                                         checked: true
                                       },
                                     
                                        item:{
                                         id: 'something',
-                                        label: area_list[2],
+                                        label: countries[2],
                                         checked: true
                                       },
                                         item:{
                                         id: i+1,
-                                        label: area_list[4],
+                                        label: countries[4],
                                         checked: true
                                       }
                                     },{
                                        item:{
                                         id: i+2,
-                                        label: area_list[5],
+                                        label: countries[5],
                                         checked: true
                                       }
                                     }]},
                                     {
                                        item:{
                                         id: i+2,
-                                        label: area_list[6],
+                                        label: countries[2] + "alsohello1",
                                         checked: true
                                       },
                                         item:{
                                         id: i+1,
-                                        label: area_list[6],
+                                        label: countries[6]+ "angola?",
                                         checked: true
                                       }
                                     },{
                                        item:{
                                         id: i+2,
-                                        label: area_list[4],
+                                        label: countries[4]+ "alsohello",
                                         checked: true
                                       }
                                     }]
                                   });
 
                                  Countries.push({
-                                    item:{
-                                      id: 'id2',
-                                      label: area_list[9],
+                                  item:{
+                                    id: 'id3',
+                                    label: countries[0],
+                                    checked: false
+                                  },
+                                  children: [{
+                                     item:{
+                                      id: 'id31',
+                                      label: countries[1],
                                       checked: true
+                                    }
+                                  },{
+                                     item:{
+                                      id: 'id32',
+                                      label: countries[2],
+                                      checked: false
                                     },
                                     children: [{
-                                       item:{
-                                        id: 'id21',
-                                        label: area_list[10],
-                                        checked: true
+                                      item:{
+                                        id: 'id321',
+                                        label: countries[3],
+                                        checked: false
                                       }
                                     },{
-                                       item:{
-                                        id: 'id22',
-                                        label: area_list[11],
-                                        checked: true
+                                      item:{
+                                        id: 'id322',
+                                        label: countries[4],
+                                        checked: false
                                       }
                                     }]
-                                  });
+                                  }]
+                                });
 
-                                  $("#tree-container").highCheckTree({
-                                      data: Countries
-                                  });
+
+                                  // $("#tree-container").highCheckTree({
+                                  //     data: Countries
+                                  // });
+
+                                
+
+                                $("#tree-container").directoryTree([places, true]);
                                 </script>                                         
 							</h2>
                 </div>
