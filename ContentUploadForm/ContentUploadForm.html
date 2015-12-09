@@ -40,6 +40,9 @@
         <link rel="stylesheet" href="./GlobalLit_ Dashboard_files/directoryTree.css">
         <script src="./GlobalLit_ Dashboard_files/directoryTree.js"></script>
 
+        <!-- Content Upload Form Style -->
+        <link rel="stylesheet" href="./GlobalLit_ Dashboard_files/formstyle.css"/>
+
 
 
 
@@ -211,12 +214,11 @@ Curious Learning
                                    <input class="toggle" type="radio" name="selection"> Customize <br><br>
                                     <div class="customize" style="display: none;">
                                         <h2>Customize Sharing by Country</h2><br>
-                                        I wish to donate my content in the following regions
+                                        I wish to donate my content in the following regions (click on an area name to expand it): 
+                                        <br>
+                                        <br>
                                         <div id="tree-container"></div>
                                     </div>
-                                    <br>
-                                    <br>
-                                    <br>
                                     <br>
                                     <h2>CL Subscription Pilot Program</h2><br>
                                     <p>Curious Learning is looking at a model where it would charge deployments that do not meet the criteria of need listed above a subscription fee for access to bundles of commercial content. By checking this box you are agreeing to the following compensation if your content is included in one of these bundles:</p>
@@ -234,20 +236,20 @@ Curious Learning
 
                                 <script>
                                   $("#maxcopies").keypress(function(e){ //TEST THIS!!!
-                                    if(e.which > 47 && e.which < 66){
+                                    if(e.which > 47 && e.which < 58){
                                       return;
                                     }
                                     else{
-                                      alert("You have entered an invalid character in Max Number of \"Copies that may be used.\" Please make sure this field contains only the characters 0-9.");
+                                      alert("You have entered an invalid character in Max Number of \"Copies that may be used.\" Please make sure this field contains only numbers.");
                                     }
                                   });
 
                                   $("#totalcopies").keypress(function(e){
-                                    if(e.which > 47 && e.which < 66){
+                                    if(e.which > 47 && e.which < 58){
                                       return;
                                     }
                                     else{
-                                      alert("You have entered an invalid character in Total number of copies granted for research. Please make sure this field contains only the characters 0-9.");
+                                      alert("You have entered an invalid character in Total number of copies granted for research. Please make sure this field contains only numbers.");
                                     }
                                   });
 
@@ -301,15 +303,9 @@ Curious Learning
             var countries = [];
             var places = [];
             for(key in json){
-               // console.log(key);
-                continents.push(key);
                 for(key2 in json[key]){
-                  //  console.log(key2);
-                    areas.push(key2);
                     for(i = 0; i < json[key][key2].length; i++){
                         for(key3 in json[key][key2][i]){
-                         //   console.log(json[key][key2][i][key3]);
-                            countries.push(json[key][key2][i][key3]);
                             places.push(key + "/" + key2 + "/" + json[key][key2][i][key3]);
                         };
                     };
@@ -337,7 +333,7 @@ Curious Learning
             //                     var something  = "string";
             //                     var first = "item: {id: 'id1',label: countries[0],checked: true},";
 
-                                  var Countries = [];
+                                /*  var Countries = [];
                                   Countries.push({
                                     item:{
                                       id: 'id1',
@@ -426,16 +422,11 @@ Curious Learning
                                       }
                                     }]
                                   }]
-                                });
-
-
-                                  // $("#tree-container").highCheckTree({
-                                  //     data: Countries
-                                  // });
-
-                                
+                                });*/
 
                                 $("#tree-container").directoryTree([places, true]);
+
+                                $(".directorytree-rootselect").parent().remove();
                                 </script>                                         
 							</h2>
                 </div>
@@ -475,7 +466,7 @@ Curious Learning
 <!-- Bootstrap WYSIHTML5 -->
 <script src="./GlobalLit_ Dashboard_files/bootstrap3-wysihtml5.all.min.js" type="text/javascript"></script>
 <!-- iCheck -->
-<script src="./GlobalLit_ Dashboard_files/icheck.min.js" type="text/javascript"></script>
+<!--<script src="./GlobalLit_ Dashboard_files/icheck.min.js" type="text/javascript"></script>-->
 
 <!-- AdminLTE App -->
 <script src="./GlobalLit_ Dashboard_files/app.js" type="text/javascript"></script>

@@ -4,6 +4,7 @@
 	width: 550px;
 	margin-bottom: 15px;
 	margin-top: 8px;
+	font-weight: normal;
 }
 
 p {
@@ -42,4 +43,8 @@ form {
 
 #upload{
 	margin-left: 20px;
+}
+
+.directoryTree ul > li:last-child {
+	border-width: 0px;
 }

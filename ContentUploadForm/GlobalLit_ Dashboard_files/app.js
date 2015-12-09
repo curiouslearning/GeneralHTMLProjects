@@ -153,7 +153,7 @@ $(function() {
      * iCheck plugin in.
      * You can find the documentation at http://fronteed.com/iCheck/
      */
-    $("input[type='checkbox']:not(.simple), input[type='radio']:not(.simple)").iCheck({
+    $(/*"input[type='checkbox']:not(.simple),*/ "input[type='radio']:not(.simple)").iCheck({
         checkboxClass: 'icheckbox_minimal',
         radioClass: 'iradio_minimal'
     });
