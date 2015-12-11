@@ -167,7 +167,7 @@ Curious Learning
                     <div class="box-body">
                     <div class="container-fluid">
 							<h2>
-                                <p> Please fill out this form for each new piece of Content you wish to share with us, and indicate how you would like the content to be distributed across our deployment sites. </p>
+                                <p> Please fill out this form for each new piece of content you wish to share with us, and indicate how you would like the content to be distributed across our deployment sites. </p>
                                 <br>
 
                                 <form>
@@ -235,7 +235,8 @@ Curious Learning
                                 </form>       
 
                                 <script>
-                                  $("#maxcopies").keypress(function(e){ //TEST THIS!!!
+                                  // input validation for fields requiring numbers
+                                  $("#maxcopies").keypress(function(e){
                                     if(e.which > 47 && e.which < 58){
                                       return;
                                     }
@@ -243,7 +244,6 @@ Curious Learning
                                       alert("You have entered an invalid character in Max Number of \"Copies that may be used.\" Please make sure this field contains only numbers.");
                                     }
                                   });
-
                                   $("#totalcopies").keypress(function(e){
                                     if(e.which > 47 && e.which < 58){
                                       return;
@@ -253,10 +253,13 @@ Curious Learning
                                     }
                                   });
 
-
+                                // show checkbox tree when "customize" is selected
                                 $(document).ready(function(){
                                     $(".toggle").on('ifChecked', function(event){
                                         $(".customize").toggle("show");
+                                    })
+                                    $(".toggle").on('ifUnchecked', function(event){
+                                        $(".customize").toggle("hide");
                                     })
                                 });
 
@@ -295,23 +298,164 @@ Curious Learning
                                     }
                                   };
 
+                                // create array of json data
+                                var continents = [];
+                                var areas = [];
+                                var countries = [];
+                                var places = [];
+                                for(key in json){
+                                    for(key2 in json[key]){
+                                        for(i = 0; i < json[key][key2].length; i++){
+                                            for(key3 in json[key][key2][i]){
+                                                places.push(key + "/" + key2 + "/" + json[key][key2][i][key3]);
+                                            };
+                                        };
+                                    };
+                                };
+          
+                                // init checkbox tree
+                                $("#tree-container").directoryTree([places, true]);
 
-                      
+                                var values = document.getElementsByClassName("directorytree-select");
+                                for(var i = 0; i < values.length; i++){
+                                    values[i].checked = true;
+                                }
 
-            var continents = [];
-            var areas = [];
-            var countries = [];
-            var places = [];
-            for(key in json){
-                for(key2 in json[key]){
-                    for(i = 0; i < json[key][key2].length; i++){
-                        for(key3 in json[key][key2][i]){
-                            places.push(key + "/" + key2 + "/" + json[key][key2][i][key3]);
-                        };
-                    };
-                };
-            };
-            // console.log("continents " + continents);
+
+                                $('.directorytree-select').click(function() {
+                                   if($(this).prop('checked')==false) {                                     
+                                        var currValue = $(this).val();
+                                        for(var i = 0; i < values.length; i++){
+                                            if(currValue.indexOf($(values[i]).val()) == 0){
+                                                values[i].checked = false;                                 
+                                            }
+                                        }
+                                    }
+                                });
+
+                                // when child element is unchecked, set all parent elements to "indeterminate"
+                                $('.directorytree-select').click(function() {
+                                   if($(this).prop('checked')==false) {                                     
+                                        var currValue = $(this).val();
+                                        for(var i = 0; i < values.length; i++){
+                                           if(currValue == $(values[i]).val()){
+                                            console.log("here");
+                                               values[i].checked = false;  
+                                            }
+                                           else if(currValue.indexOf($(values[i]).val()) == 0){
+                                                values[i].indeterminate = true;                                 
+                                            }
+                                        }
+                                    }
+                                });
+
+                                // remove root of directory tree (it's uncesscary)
+                                $(".directorytree-rootselect").parent().remove();
+
+                             /*   $('.directorytree-select').click(function() {
+                                    var contains = [];
+                                    for(var i = 0; i < values.length; i++){
+                                        console.log("first value: " + $(values[i]).val());
+                                       for(var j = 0; j < values.length; j++){
+                                            if($(values[j]).val().indexOf($(values[i]).val()) == 0){
+                                                contains.push(values[j]);
+                                                console.log("current value: " + $(values[j]).val());
+                                            } 
+                                        }
+                                        console.log(contains);
+
+                                        var numUnchecked = 0;
+                                        var numChecked = 0;
+                                        for(var k = 0; k < contains.length; k++){
+                                            console.log("value of contains: " + $(contains).val());
+                                            console.log("value of contains[k]: " + $(contains[k]).val());
+                                            console.log("value of contains[k]: " + contains[k].checked);
+                                            if(contains[k].checked == false){
+                                                numUnchecked++;
+                                                console.log("numUnchecked: " + numUnchecked);
+                                                console.log("contains length: " + contains.length);
+                                                if(numUnchecked >= contains.length - 1){
+                                                    console.log("got here 2");
+                                                    console.log($(values[i]).val());
+                                                    console.log(values[i].checked);
+                                                    values[i].indeterminate = false;
+                                                    values[i].checked = false;
+                                                }
+                                            }
+                                            else{
+                                                numChecked++;
+                                                if(numChecked >= contains.length - 1){
+                                                    values[i].checked = true;
+                                                }
+                                            }
+                                        };
+                                        contains.length = 0;
+                                    };
+                                        
+                                }); */
+                            //var contains = [];
+
+                         /*   $('.directorytree-select').click(function() {
+                                var contains = [];
+                                for(var i = 0; i < values.length; i++){
+                                    if($(values[i]).val().indexOf("/Africa/Eastern Africa") == 0){
+                                        contains.push(values[i]);
+                                    }
+                                }
+                                var toUncheck = contains.shift();
+                                console.log(contains);
+                                console.log("length: " + contains.length);
+                                var numUnchecked = 0;
+                                for(var i = 0; i < contains.length; i++){
+                                    console.log("got here");
+                                    if(contains[i].checked == false){
+                                        numUnchecked++;
+                                        console.log(numUnchecked);
+                                        if(numUnchecked == contains.length){
+                                            console.log(contains.length);
+                                            console.log(toUncheck);
+                                            toUncheck.checked = false;
+                                            toUncheck.indeterminate = false;
+                                        }
+                                    }
+                                }
+                                contains.length = 0;
+                                console.log($(this).val() + contains);
+                                console.log("done");
+
+                            });*/
+                            
+                                
+
+                               // if something in the list of nodes has a value, and if the nodes that contain that value are unchecked, then uncheck the thing in the list of nodes too
+
+
+
+
+
+
+                             /*   console.log(document.getElementsByClassName("has-children")[1]);
+                                var parent = document.getElementsByClassName("directorytree-select")[1];
+                                //console.log(document.getElementsByClassName("directorytree-select")[1]);
+                               // console.log($(".has-children > .directorytree-select").checked);
+                                console.log($(".has-children").children()[0]);
+                                var child = ($(".has-children").children()[0]);
+                                console.log(child);
+                                console.log($(child).children()[0]);
+
+                                var parent = $(child).children()[0];
+
+
+
+                                parent.checked = false;
+
+*/
+
+                              
+                                
+
+
+                                  // console.log("continents " + continents);
             // console.log("areas " + areas);
             // console.log("countries " + countries);
             // console.log("places: " + places);
@@ -423,10 +567,6 @@ Curious Learning
                                     }]
                                   }]
                                 });*/
-
-                                $("#tree-container").directoryTree([places, true]);
-
-                                $(".directorytree-rootselect").parent().remove();
                                 </script>                                         
 							</h2>
                 </div>

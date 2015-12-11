@@ -48,3 +48,7 @@ form {
 .directoryTree ul > li:last-child {
 	border-width: 0px;
 }
+
+.form-control {
+	margin-top: 10px;
+}
