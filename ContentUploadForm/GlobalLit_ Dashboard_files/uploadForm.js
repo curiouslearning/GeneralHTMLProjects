@@ -28,7 +28,7 @@
           $(".customize").toggle("hide");
       })
   });
-  
+
     // sample json data
     var json = {
       "Africa": {
@@ -86,7 +86,7 @@
       values[i].checked = true;
   }
 
-  // uncheck parent box if not all children are checked
+  // uncheck parent box if all children unchecked
   $('.directorytree-select').click(function() {
      if($(this).prop('checked')==false) {                                     
           var clickedValue = $(this).val();
@@ -99,7 +99,7 @@
   });
 
   // check parent box if all children are checked
-  $('.directorytree-select').click(function(){
+    $('.directorytree-select').click(function(){
       var clicked = $(this);
       checkParent(clicked);
       function checkParent(clicked){
@@ -116,13 +116,64 @@
                           numChecked++;
                       }
                   }
-
               }
               if(numChecked == substringsOfClickedValue.length){ // all child boxes are checked
                   for(var j = 0; j < values.length; j++){
                       for(var k = 0; k < substringsOfClickedValue.length; k++){
                           if ($(values[j]).val() == substringsOfClickedValue[k]){
                               $(values[j]).prop("checked", true);
+                              $(values[j]).prop("indeterminate", false);
+                              checkParent($(values[j]));  // recurse up tree starting at next level up                          
+                          }
+                      }
+                  }
+              }
+          }
+          substringsOfClickedValue.length = 0;
+      }
+  })
+
+
+// when box unchecked, make parent boxes indeterminate 
+$('.directorytree-select').click(function(){
+      var clicked = $(this);
+      checkParent(clicked);
+      function checkParent(clicked){
+
+          var substringsOfClickedValue = [];
+          var numUnchecked = 0;
+          var clickedValue = clicked.val();
+          if(clicked.prop('checked')==false){
+
+              for(var i=0; i < values.length; i++){
+                  var clickedSubstring = clickedValue.substring(0, clickedValue.lastIndexOf("/"));
+                  var substring = $(values[i]).val().substring(0, $(values[i]).val().lastIndexOf("/"));
+                  if(substring == clickedSubstring){
+                      substringsOfClickedValue.push(substring);
+                      if($(values[i]).prop('checked') == false){
+
+                          numUnchecked++;
+                      }
+                  }
+              }
+              if(numUnchecked < substringsOfClickedValue.length){ // not all child boxes are checked
+
+                  for(var j = 0; j < values.length; j++){
+                      for(var k = 0; k < substringsOfClickedValue.length; k++){
+                          if ($(values[j]).val() == substringsOfClickedValue[k]){
+                              $(values[j]).prop("indeterminate", true);
+                              checkParent($(values[j]));  // recurse up tree starting at next level up                          
+                          }
+                      }
+                  }
+              }
+              else if(numUnchecked == substringsOfClickedValue.length){
+                for(var j = 0; j < values.length; j++){
+                      for(var k = 0; k < substringsOfClickedValue.length; k++){
+                          if ($(values[j]).val() == substringsOfClickedValue[k]){
+                              $(values[j]).prop("checked", false);
+                              $(values[j]).prop("indeterminate", false);
+
                               checkParent($(values[j]));  // recurse up tree starting at next level up                          
                           }
                       }
@@ -131,6 +182,53 @@
               substringsOfClickedValue.length = 0;
           }
       }
+  })
+
+// when box checked, make parent boxes indeterminate
+$('.directorytree-select').click(function(){
+      var clicked = $(this);
+      checkParent(clicked);
+      function checkParent(clicked){
+          var substringsOfClickedValue = [];
+          var numChecked = 0;
+          var clickedValue = clicked.val();
+          if(clicked.prop('checked')==true){
+              for(var i=0; i < values.length; i++){
+                  var clickedSubstring = clickedValue.substring(0, clickedValue.lastIndexOf("/"));
+                  var substring = $(values[i]).val().substring(0, $(values[i]).val().lastIndexOf("/"));
+                  if(substring == clickedSubstring){
+                      substringsOfClickedValue.push(substring);
+                      if($(values[i]).prop('checked') == true){
+                          numChecked++;
+                      }
+                  }
+              }
+              if(numChecked < substringsOfClickedValue.length){ // not all child boxes are checked
+                  for(var j = 0; j < values.length; j++){
+                      for(var k = 0; k < substringsOfClickedValue.length; k++){
+                          if ($(values[j]).val() == substringsOfClickedValue[k]){
+                              $(values[j]).prop("indeterminate", true);
+                              checkParent($(values[j]));  // recurse up tree starting at next level up                          
+                          }
+                      }
+                  }
+              }
+              else if(numChecked == substringsOfClickedValue.length){
+                for(var j = 0; j < values.length; j++){
+                      for(var k = 0; k < substringsOfClickedValue.length; k++){
+                          if ($(values[j]).val() == substringsOfClickedValue[k]){
+                              $(values[j]).prop("checked", true);
+                              $(values[j]).prop("indeterminate", false);
+
+                              checkParent($(values[j]));                          
+                          }
+                      }
+                  }
+              }
+              substringsOfClickedValue.length = 0;
+          }
+      }
+
   })
 
    // remove root of directory tree (it's uncesscary)
